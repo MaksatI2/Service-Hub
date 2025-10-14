@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useAuthStore } from '../store/auth.store';
 import { serviceService } from '../lib/services/service.service';
 import type { Service, Category } from '../types/service.types.ts';
 
