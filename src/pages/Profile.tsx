@@ -169,7 +169,7 @@ export const ProfileView: React.FC = () => {
     setIsLoading(true);
     setError('');
 
-    const { profile: updated, error: updateError } = await profileService.updateProfile(profile.id, formData);
+    const { error: updateError } = await profileService.updateProfile(profile.id, formData);
 
     if (updateError) {
       setError('Ошибка при обновлении профиля');
