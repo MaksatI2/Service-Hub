@@ -167,12 +167,12 @@ class ServiceService {
   /**
    * Получение рекомендованных/популярных услуг
    */
-  async getFeaturedServices(limit: number = 6): Promise<{ services: Service[]; error: Error | null }> {
-    return this.getServices({
-      is_featured: true,
-      sort_by: 'popular'
-    });
-  }
+  // async getFeaturedServices(limit: number = 6): Promise<{ services: Service[]; error: Error | null }> {
+  //   return this.getServices({
+  //     is_featured: true,
+  //     sort_by: 'popular'
+  //   });
+  // }
 }
 
 export const serviceService = new ServiceService();
