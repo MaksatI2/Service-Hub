@@ -48,7 +48,6 @@ class ServiceService {
         query = query.eq('is_featured', filters.is_featured);
       }
 
-      // Сортировка
       switch (filters?.sort_by) {
         case 'price_asc':
           query = query.order('price', { ascending: true, nullsFirst: false });
@@ -57,7 +56,6 @@ class ServiceService {
           query = query.order('price', { ascending: false, nullsFirst: false });
           break;
         case 'rating':
-          // Сортировка по рейтингу специалиста (требует join)
           query = query.order('created_at', { ascending: false });
           break;
         case 'popular':
@@ -110,7 +108,6 @@ class ServiceService {
 
       if (error) throw error;
 
-      // Увеличиваем счетчик просмотров
       await supabase
         .from('services')
         .update({ view_count: (data.view_count || 0) + 1 })

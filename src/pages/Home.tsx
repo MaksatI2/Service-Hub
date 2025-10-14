@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useAuthStore } from '../store/auth.store';
 import { serviceService } from '../lib/services/service.service';
 import type { Service, Category } from '../types/service.types.ts';
 
 export const Home: React.FC = () => {
-  const { profile, isAuthenticated, logout } = useAuthStore();
   const [services, setServices] = useState<Service[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -23,11 +21,9 @@ export const Home: React.FC = () => {
   const loadData = async () => {
     setIsLoading(true);
     
-    // Загружаем категории
     const { categories: cats } = await serviceService.getCategories();
     setCategories(cats);
 
-    // Загружаем услуги
     await loadServices();
     
     setIsLoading(false);
@@ -39,10 +35,6 @@ export const Home: React.FC = () => {
       search: searchQuery || undefined
     });
     setServices(servs);
-  };
-
-  const handleLogout = async () => {
-    await logout();
   };
 
   const formatPrice = (price: number, type: string) => {
@@ -70,67 +62,6 @@ export const Home: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <h1 className="text-2xl font-bold text-primary-600">ServiceHub</h1>
-              <nav className="hidden md:flex space-x-6">
-                <a href="#" className="text-gray-700 hover:text-primary-600">Услуги</a>
-                <a href="#" className="text-gray-700 hover:text-primary-600">Специалисты</a>
-                <a href="#" className="text-gray-700 hover:text-primary-600">Как это работает</a>
-              </nav>
-            </div>
-
-            <div className="flex items-center space-x-4">
-              {isAuthenticated && profile ? (
-                <>
-                  <div className="flex items-center space-x-3">
-                    {profile.avatar_url ? (
-                      <img
-                        src={profile.avatar_url}
-                        alt={profile.personal_data.full_name}
-                        className="h-10 w-10 rounded-full"
-                      />
-                    ) : (
-                      <div className="h-10 w-10 rounded-full bg-primary-500 flex items-center justify-center text-white font-semibold">
-                        {profile.personal_data.full_name}
-                      </div>
-                    )}
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">{profile.personal_data.full_name}</p>
-                      <p className="text-xs text-gray-500 capitalize">{profile.user_type === 'client' ? 'Клиент' : 'Специалист'}</p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={handleLogout}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
-                  >
-                    Выйти
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/auth/login"
-                    className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
-                  >
-                    Войти
-                  </Link>
-                  <Link
-                    to="/auth/register"
-                    className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700"
-                  >
-                    Регистрация
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
-
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-primary-600 to-primary-700 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -272,11 +203,11 @@ export const Home: React.FC = () => {
                               <span className="text-sm text-gray-600 ml-1">
                                 {service.specialist.rating.toFixed(1)}
                               </span>
-                              {service.specialist.review_count && (
+                              {/* {service.specialist.review_count && (
                                 <span className="text-sm text-gray-400 ml-1">
                                   ({service.specialist.review_count})
                                 </span>
-                              )}
+                              )} */}
                             </div>
                           )}
                         </div>

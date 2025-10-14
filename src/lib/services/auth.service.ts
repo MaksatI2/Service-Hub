@@ -1,5 +1,3 @@
-// src/lib/services/auth.service.ts
-
 import { supabase } from '../supabase/client';
 import type { RegisterData, LoginData, Profile } from '../../types/auth.types';
 
@@ -9,7 +7,6 @@ class AuthService {
    */
   async register(data: RegisterData): Promise<{ profile: Profile | null; error: Error | null }> {
     try {
-      // 1. Создаем пользователя в Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
@@ -25,7 +22,6 @@ class AuthService {
       if (authError) throw authError;
       if (!authData.user) throw new Error('Ошибка создания пользователя');
 
-      // 2. Создаем запись в таблице profiles
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .insert({
@@ -54,7 +50,6 @@ class AuthService {
    */
   async login(data: LoginData): Promise<{ profile: Profile | null; error: Error | null }> {
     try {
-      // 1. Авторизация через Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
         email: data.email,
         password: data.password
@@ -63,7 +58,6 @@ class AuthService {
       if (authError) throw authError;
       if (!authData.user) throw new Error('Ошибка входа');
 
-      // 2. Получаем данные профиля из таблицы profiles
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('*')

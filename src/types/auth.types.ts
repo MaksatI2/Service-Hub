@@ -9,8 +9,8 @@ export interface Profile {
     phone?: string;
     [key: string]: any;
   };
-  avatar_url?: string;
-  cover_image_url?: string;
+  avatar_url: string| null;
+  cover_image_url: string | null;
   bio?: string;
   rating: number;
   review_count: number;

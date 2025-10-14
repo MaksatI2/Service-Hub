@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './store/auth.store';
+import { Header } from './components/forms/Header';
 import { Home } from './pages/Home';
 import { Login } from './pages/auth/Login';
 import { Register } from './pages/auth/Register';
+import { ProfileView } from './pages/Profile';
 
-// Protected Route Component
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   
@@ -16,7 +17,6 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   return <>{children}</>;
 };
 
-// Public Route (redirect if authenticated)
 const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   
@@ -32,7 +32,6 @@ function App() {
   const isLoading = useAuthStore((state) => state.isLoading);
 
   useEffect(() => {
-    // Проверяем аутентификацию при загрузке приложения
     checkAuth();
   }, [checkAuth]);
 
@@ -49,6 +48,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <Header />
       <Routes>
         {/* Главная страница (доступна всем) */}
         <Route path="/" element={<Home />} />
@@ -71,24 +71,54 @@ function App() {
           }
         />
 
+        {/* Профиль (защищенный маршрут) */}
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfileView />
+            </ProtectedRoute>
+          }
+        />
+
         {/* Защищенные маршруты (для будущего функционала) */}
         <Route
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <div className="p-8">
-                <h1 className="text-3xl font-bold">Dashboard (В разработке)</h1>
+              <div className="min-h-screen bg-gray-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                  <h1 className="text-4xl font-bold text-gray-900">Dashboard</h1>
+                  <p className="mt-2 text-gray-600">В разработке...</p>
+                </div>
               </div>
             </ProtectedRoute>
           }
         />
 
         <Route
-          path="/profile"
+          path="/settings"
           element={
             <ProtectedRoute>
-              <div className="p-8">
-                <h1 className="text-3xl font-bold">Профиль (В разработке)</h1>
+              <div className="min-h-screen bg-gray-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                  <h1 className="text-4xl font-bold text-gray-900">Настройки</h1>
+                  <p className="mt-2 text-gray-600">В разработке...</p>
+                </div>
+              </div>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/my-services"
+          element={
+            <ProtectedRoute>
+              <div className="min-h-screen bg-gray-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                  <h1 className="text-4xl font-bold text-gray-900">Мои услуги</h1>
+                  <p className="mt-2 text-gray-600">В разработке...</p>
+                </div>
               </div>
             </ProtectedRoute>
           }

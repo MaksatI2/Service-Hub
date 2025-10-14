@@ -7,10 +7,11 @@ interface AuthStore {
   profile: Profile | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  notification: { type: 'success' | 'error'; message: string } | null;
   
-  // Actions
   setProfile: (profile: Profile | null) => void;
   setLoading: (loading: boolean) => void;
+  setNotification: (notification: { type: 'success' | 'error'; message: string } | null) => void;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   register: (data: any) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
@@ -23,6 +24,7 @@ export const useAuthStore = create<AuthStore>()(
       profile: null,
       isAuthenticated: false,
       isLoading: true,
+      notification: null,
 
       setProfile: (profile) => set({ 
         profile, 
@@ -32,16 +34,47 @@ export const useAuthStore = create<AuthStore>()(
 
       setLoading: (loading) => set({ isLoading: loading }),
 
+      setNotification: (notification) => set({ notification }),
+
       login: async (email, password) => {
         set({ isLoading: true });
+        
+        if (!email || !password) {
+          set({ isLoading: false });
+          const errorMsg = 'Заполните все поля';
+          set({ notification: { type: 'error', message: errorMsg } });
+          return { success: false, error: errorMsg };
+        }
+
+        if (email.length < 5 || !email.includes('@')) {
+          set({ isLoading: false });
+          const errorMsg = 'Введите корректный email';
+          set({ notification: { type: 'error', message: errorMsg } });
+          return { success: false, error: errorMsg };
+        }
+
+        if (password.length < 6) {
+          set({ isLoading: false });
+          const errorMsg = 'Пароль должен быть не менее 6 символов';
+          set({ notification: { type: 'error', message: errorMsg } });
+          return { success: false, error: errorMsg };
+        }
+
         const { profile, error } = await authService.login({ email, password });
         
         if (error) {
           set({ isLoading: false });
-          return { success: false, error: error.message };
+          const errorMsg = error.message || 'Ошибка входа. Проверьте email и пароль';
+          set({ notification: { type: 'error', message: errorMsg } });
+          return { success: false, error: errorMsg };
         }
 
-        set({ profile, isAuthenticated: true, isLoading: false });
+        set({ 
+          profile, 
+          isAuthenticated: true, 
+          isLoading: false,
+          notification: { type: 'success', message: `Добро пожаловать, ${profile?.personal_data.full_name}!` }
+        });
         return { success: true };
       },
 
@@ -51,17 +84,29 @@ export const useAuthStore = create<AuthStore>()(
         
         if (error) {
           set({ isLoading: false });
-          return { success: false, error: error.message };
+          const errorMsg = error.message || 'Ошибка регистрации';
+          set({ notification: { type: 'error', message: errorMsg } });
+          return { success: false, error: errorMsg };
         }
 
-        set({ profile, isAuthenticated: true, isLoading: false });
+        set({ 
+          profile, 
+          isAuthenticated: true, 
+          isLoading: false,
+          notification: { type: 'success', message: 'Регистрация успешна!' }
+        });
         return { success: true };
       },
 
       logout: async () => {
         set({ isLoading: true });
         await authService.logout();
-        set({ profile: null, isAuthenticated: false, isLoading: false });
+        set({ 
+          profile: null, 
+          isAuthenticated: false, 
+          isLoading: false,
+          notification: { type: 'success', message: 'Вы вышли из аккаунта' }
+        });
       },
 
       checkAuth: async () => {
