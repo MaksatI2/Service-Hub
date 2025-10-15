@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../../store/auth.store';
+import { useLocation } from 'react-router-dom';
 
 export const Login: React.FC = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const { login, isLoading, setNotification, notification } = useAuthStore();
+  
+  const searchParams = new URLSearchParams(location.search);
+  const fromRegister = searchParams.get('registered') === 'true' || location.state?.fromRegister;
+  const registerMessage = location.state?.message;
+  
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -37,14 +44,23 @@ export const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      {fromRegister && (
+        <div className="fixed top-4 right-4 z-50 animate-slide-in">
+          <div className="px-6 py-4 rounded-lg shadow-lg text-white flex items-center gap-3 max-w-md bg-green-500">
+            <span className="text-xl">✓</span>
+            <span>
+              {registerMessage || 'Регистрация успешна! Войдите в свой аккаунт.'}
+            </span>
+          </div>
+        </div>
+      )}
       {/* Notification */}
       {notification && (
         <div className="fixed top-4 right-4 z-50 animate-slide-in">
-          <div className={`px-6 py-4 rounded-lg shadow-lg text-white flex items-center gap-3 max-w-md ${
-            notification.type === 'success' 
-              ? 'bg-green-500' 
-              : 'bg-red-500'
-          }`}>
+          <div className={`px-6 py-4 rounded-lg shadow-lg text-white flex items-center gap-3 max-w-md ${notification.type === 'success'
+            ? 'bg-green-500'
+            : 'bg-red-500'
+            }`}>
             <span className="text-xl">
               {notification.type === 'success' ? '✓' : '✕'}
             </span>

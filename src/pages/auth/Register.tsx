@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuthStore } from '../../store/auth.store';
 import type { UserType } from '../../types/auth.types';
 
 export const Register: React.FC = () => {
-  const navigate = useNavigate();
   const register = useAuthStore((state) => state.register);
   const isLoading = useAuthStore((state) => state.isLoading);
 
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    confirmPassword: '',
     full_name: '',
     phone: '',
     user_type: 'client' as UserType
@@ -23,28 +21,22 @@ export const Register: React.FC = () => {
     e.preventDefault();
     setError('');
 
-    // Валидация
-    if (formData.password !== formData.confirmPassword) {
-      setError('Пароли не совпадают');
-      return;
-    }
-
     if (formData.password.length < 6) {
       setError('Пароль должен быть минимум 6 символов');
       return;
     }
 
-    // Регистрация
     const result = await register({
       email: formData.email,
       password: formData.password,
       full_name: formData.full_name,
       phone: formData.phone || undefined,
-      role: formData.user_type
+      user_type: formData.user_type
     });
 
     if (result.success) {
-      navigate('/');
+      // Используем window.location для полной перезагрузки страницы
+      window.location.href = '/auth/login?registered=true';
     } else {
       setError(result.error || 'Ошибка регистрации');
     }
@@ -91,11 +83,10 @@ export const Register: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, user_type: 'client' })}
-                  className={`p-4 border-2 rounded-lg text-center transition ${
-                    formData.user_type === 'client'
-                      ? 'border-primary-500 bg-primary-50'
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
+                  className={`p-4 border-2 rounded-lg text-center transition ${formData.user_type === 'client'
+                    ? 'border-primary-500 bg-primary-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                    }`}
                 >
                   <div className="font-medium">Найти услугу</div>
                   <div className="text-sm text-gray-500">Клиент</div>
@@ -103,11 +94,10 @@ export const Register: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, user_type: 'specialist' })}
-                  className={`p-4 border-2 rounded-lg text-center transition ${
-                    formData.user_type === 'specialist'
-                      ? 'border-primary-500 bg-primary-50'
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
+                  className={`p-4 border-2 rounded-lg text-center transition ${formData.user_type === 'specialist'
+                    ? 'border-primary-500 bg-primary-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                    }`}
                 >
                   <div className="font-medium">Оказывать услуги</div>
                   <div className="text-sm text-gray-500">Специалист</div>
@@ -177,22 +167,7 @@ export const Register: React.FC = () => {
                 onChange={handleChange}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
-            </div>
-
-            {/* Confirm Password */}
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                Подтвердите пароль *
-              </label>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                required
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              />
+              <p className="mt-1 text-xs text-gray-500">Минимум 6 символов</p>
             </div>
           </div>
 

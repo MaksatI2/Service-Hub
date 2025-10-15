@@ -307,31 +307,28 @@ export const ProfileView: React.FC = () => {
           <div className="flex gap-8">
             <button
               onClick={() => setActiveTab('general')}
-              className={`pb-4 font-medium text-sm ${
-                activeTab === 'general'
+              className={`pb-4 font-medium text-sm ${activeTab === 'general'
                   ? 'text-primary-600 border-b-2 border-primary-600'
                   : 'text-gray-600 hover:text-gray-900'
-              }`}
+                }`}
             >
               Общая информация
             </button>
             <button
               onClick={() => setActiveTab('documents')}
-              className={`pb-4 font-medium text-sm ${
-                activeTab === 'documents'
+              className={`pb-4 font-medium text-sm ${activeTab === 'documents'
                   ? 'text-primary-600 border-b-2 border-primary-600'
                   : 'text-gray-600 hover:text-gray-900'
-              }`}
+                }`}
             >
               Документы
             </button>
             <button
               onClick={() => setActiveTab('social')}
-              className={`pb-4 font-medium text-sm ${
-                activeTab === 'social'
+              className={`pb-4 font-medium text-sm ${activeTab === 'social'
                   ? 'text-primary-600 border-b-2 border-primary-600'
                   : 'text-gray-600 hover:text-gray-900'
-              }`}
+                }`}
             >
               Социальные ссылки
             </button>
@@ -531,98 +528,98 @@ export const ProfileView: React.FC = () => {
         )}
 
         {/* Social Tab */}
-{activeTab === 'social' && (
-  <div className="space-y-6">
-    <p className="text-gray-600 mb-6">Добавьте ссылки на ваши социальные сети и профессиональные аккаунты</p>
-    
-    {editMode ? (
-      <>
-        <div className="space-y-4">
-          {[
-            { key: 'telegram', name: 'Telegram', placeholder: 'https://t.me/username' },
-            { key: 'whatsapp', name: 'WhatsApp', placeholder: 'https://wa.me/1234567890' },
-            { key: 'instagram', name: 'Instagram', placeholder: 'https://instagram.com/username' },
-            { key: 'linkedin', name: 'LinkedIn', placeholder: 'https://linkedin.com/in/username' },
-            { key: 'github', name: 'GitHub', placeholder: 'https://github.com/username' },
-            { key: 'portfolio', name: 'Портфолио', placeholder: 'https://yourportfolio.com' }
-          ].map(platform => (
-            <div key={platform.key}>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {platform.name}
-              </label>
-              <input
-                type="url"
-                placeholder={platform.placeholder}
-                defaultValue={formData?.social_links?.[platform.key] || ''}
-                onChange={(e) => {
-                  setFormData(prev => ({
-                    ...prev,
-                    social_links: {
-                      ...prev?.social_links,
-                      [platform.key]: e.target.value
-                    }
-                  }));
-                }}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-              />
-            </div>
-          ))}
-        </div>
+        {activeTab === 'social' && (
+          <div className="space-y-6">
+            <p className="text-gray-600 mb-6">Добавьте ссылки на ваши социальные сети и профессиональные аккаунты</p>
 
-        <div className="flex gap-4 pt-6">
-          <button
-            onClick={handleSave}
-            disabled={isLoading}
-            className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? 'Сохранение...' : 'Сохранить'}
-          </button>
-          <button
-            onClick={handleEditToggle}
-            disabled={isLoading}
-            className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
-          >
-            Отмена
-          </button>
-        </div>
-      </>
-    ) : (
-      <div className="space-y-3">
-        {[
-          { key: 'telegram', name: 'Telegram', icon: '✈️' },
-          { key: 'whatsapp', name: 'WhatsApp', icon: '💬' },
-          { key: 'instagram', name: 'Instagram', icon: '📷' },
-          { key: 'linkedin', name: 'LinkedIn', icon: '💼' },
-          { key: 'github', name: 'GitHub', icon: '🐙' },
-          { key: 'portfolio', name: 'Портфолио', icon: '🌐' }
-        ].map(platform => {
-          const url = profile.social_links?.[platform.key];
-          return url ? (
-            <div key={platform.key} className="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
-              <div className="flex items-center gap-3">
-                <span className="text-lg">{platform.icon}</span>
-                <div>
-                  <p className="font-medium text-gray-900">{platform.name}</p>
-                  <p className="text-sm text-gray-600 truncate">{url}</p>
+            {editMode ? (
+              <>
+                <div className="space-y-4">
+                  {[
+                    { key: 'telegram', name: 'Telegram', placeholder: 'https://t.me/username' },
+                    { key: 'whatsapp', name: 'WhatsApp', placeholder: 'https://wa.me/1234567890' },
+                    { key: 'instagram', name: 'Instagram', placeholder: 'https://instagram.com/username' },
+                    { key: 'linkedin', name: 'LinkedIn', placeholder: 'https://linkedin.com/in/username' },
+                    { key: 'github', name: 'GitHub', placeholder: 'https://github.com/username' },
+                    { key: 'portfolio', name: 'Портфолио', placeholder: 'https://yourportfolio.com' }
+                  ].map(platform => (
+                    <div key={platform.key}>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        {platform.name}
+                      </label>
+                      <input
+                        type="url"
+                        placeholder={platform.placeholder}
+                        defaultValue={formData?.social_links?.[platform.key] || ''}
+                        onChange={(e) => {
+                          setFormData(prev => ({
+                            ...prev,
+                            social_links: {
+                              ...prev?.social_links,
+                              [platform.key]: e.target.value
+                            }
+                          }));
+                        }}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      />
+                    </div>
+                  ))}
                 </div>
-              </div>
-              <a
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700"
-              >
-                Перейти
-              </a>
-            </div>
-          ) : null;
-        })}
+
+                <div className="flex gap-4 pt-6">
+                  <button
+                    onClick={handleSave}
+                    disabled={isLoading}
+                    className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isLoading ? 'Сохранение...' : 'Сохранить'}
+                  </button>
+                  <button
+                    onClick={handleEditToggle}
+                    disabled={isLoading}
+                    className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                  >
+                    Отмена
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="space-y-3">
+                {[
+                  { key: 'telegram', name: 'Telegram', icon: '✈️' },
+                  { key: 'whatsapp', name: 'WhatsApp', icon: '💬' },
+                  { key: 'instagram', name: 'Instagram', icon: '📷' },
+                  { key: 'linkedin', name: 'LinkedIn', icon: '💼' },
+                  { key: 'github', name: 'GitHub', icon: '🐙' },
+                  { key: 'portfolio', name: 'Портфолио', icon: '🌐' }
+                ].map(platform => {
+                  const url = profile.social_links?.[platform.key];
+                  return url ? (
+                    <div key={platform.key} className="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <span className="text-lg">{platform.icon}</span>
+                        <div>
+                          <p className="font-medium text-gray-900">{platform.name}</p>
+                          <p className="text-sm text-gray-600 truncate">{url}</p>
+                        </div>
+                      </div>
+                      <a
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+                      >
+                        Перейти
+                      </a>
+                    </div>
+                  ) : null;
+                })}
                 {!profile.social_links || Object.keys(profile.social_links).length === 0 && (
-                    <p className="text-gray-500 text-center py-8">Социальные ссылки не добавлены</p>
+                  <p className="text-gray-500 text-center py-8">Социальные ссылки не добавлены</p>
                 )}
-            </div>
+              </div>
             )}
-        </div>
+          </div>
         )}
       </div>
     </div>

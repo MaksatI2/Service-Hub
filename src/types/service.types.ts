@@ -18,7 +18,7 @@ export interface CategoryWithChildren extends Category {
   services_count?: number;
 }
 
-export type PriceType = 'fixed' | 'hourly' | 'package' | 'custom';
+export type PriceType = "fixed" | "hourly" | "package" | "custom";
 
 export interface Service {
   id: string;
@@ -40,7 +40,7 @@ export interface Service {
   booking_count: number;
   created_at: string;
   updated_at: string;
-  
+
   specialist?: SpecialistInfo;
   category?: Category;
 }
@@ -102,7 +102,13 @@ export interface ServiceCharacteristics {
   [key: string]: any;
 }
 
-export type SortBy = 'price_asc' | 'price_desc' | 'rating' | 'recent' | 'popular' | 'booking_count';
+export type SortBy =
+  | "price_asc"
+  | "price_desc"
+  | "rating"
+  | "recent"
+  | "popular"
+  | "booking_count";
 
 export interface ServiceFilters {
   category_id?: string;
@@ -178,13 +184,13 @@ export interface ServiceReview {
   comment?: string | null;
   photos?: string[];
   is_verified: boolean;
-  moderation_status: 'pending' | 'approved' | 'rejected';
+  moderation_status: "pending" | "approved" | "rejected";
   moderator_notes?: string | null;
   response_text?: string | null;
   response_created_at?: string | null;
   created_at: string;
   updated_at: string;
-  
+
   author?: {
     id: string;
     personal_data: {
@@ -194,17 +200,17 @@ export interface ServiceReview {
   };
 }
 
-export type OrderStatus = 
-  | 'draft'
-  | 'pending'
-  | 'confirmed'
-  | 'paid'
-  | 'in_progress'
-  | 'completed'
-  | 'cancelled'
-  | 'refunded'
-  | 'disputed'
-  | 'archived';
+export type OrderStatus =
+  | "draft"
+  | "pending"
+  | "confirmed"
+  | "paid"
+  | "in_progress"
+  | "completed"
+  | "cancelled"
+  | "refunded"
+  | "disputed"
+  | "archived";
 
 export interface ServiceOrder {
   id: string;
@@ -228,7 +234,7 @@ export interface ServiceOrder {
   created_at: string;
   updated_at: string;
   completed_at?: string | null;
-  
+
   service?: Service;
   client?: SpecialistInfo;
   specialist?: SpecialistInfo;
@@ -258,17 +264,17 @@ export interface ServiceAvailability {
 }
 
 export const PRICE_TYPES: Record<PriceType, string> = {
-  fixed: 'Фиксированная цена',
-  hourly: 'Почасовая оплата',
-  package: 'Пакеты услуг',
-  custom: 'Договорная цена'
+  fixed: "Фиксированная цена",
+  hourly: "Почасовая оплата",
+  package: "Пакеты услуг",
+  custom: "Договорная цена",
 };
 
 export const CURRENCIES = {
-  KGS: 'Сом',
-  USD: '$',
-  EUR: '€',
-  RUB: '₽'
+  KGS: "Сом",
+  USD: "$",
+  EUR: "€",
+  RUB: "₽",
 } as const;
 
 export const DEFAULT_SERVICE_LIMIT = 12;
