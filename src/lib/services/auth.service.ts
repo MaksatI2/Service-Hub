@@ -13,6 +13,7 @@ class AuthService {
         email: data.email,
         password: data.password,
         options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
           data: {
             full_name: data.full_name,
             user_type: data.user_type,
@@ -24,25 +25,14 @@ class AuthService {
       if (authError) throw authError;
       if (!authData.user) throw new Error("Ошибка создания пользователя");
 
-      const { data: profileData, error: profileError } = await supabase
-        .from("profiles")
-        .insert({
-          id: authData.user.id,
-          user_type: data.user_type,
-          personal_data: {
-            email: data.email,
-            full_name: data.full_name,
-            phone: data.phone || null,
-          },
-        })
-        .select()
-        .single();
+      await supabase.auth.signOut();
 
-      if (profileError) throw profileError;
+      await new Promise(resolve => setTimeout(resolve, 300));
 
-      return { profile: profileData as Profile, error: null };
+      return { profile: null, error: null };
     } catch (error) {
       console.error("Register error:", error);
+      await supabase.auth.signOut().catch(() => {});
       return { profile: null, error: error as Error };
     }
   }
@@ -100,21 +90,24 @@ class AuthService {
     error: Error | null;
   }> {
     try {
-      const {
-        data: { user: authUser },
-        error: authError,
-      } = await supabase.auth.getUser();
-
-      if (authError) throw authError;
-      if (!authUser) return { profile: null, error: null };
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError) throw sessionError;
+      if (!session) return { profile: null, error: null };
 
       const { data: profileData, error: profileError } = await supabase
         .from("profiles")
         .select("*")
-        .eq("id", authUser.id)
+        .eq("id", session.user.id)
         .single();
 
-      if (profileError) throw profileError;
+      if (profileError) {
+        if (profileError.code === 'PGRST116') {
+          await supabase.auth.signOut();
+          return { profile: null, error: new Error("Профиль не найден") };
+        }
+        throw profileError;
+      }
 
       return { profile: profileData as Profile, error: null };
     } catch (error) {

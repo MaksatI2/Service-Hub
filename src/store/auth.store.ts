@@ -99,23 +99,17 @@ export const useAuthStore = create<AuthStore>()(
           user_type: data.user_type,
         });
 
-        if (error) {
-          set({ isLoading: false });
-          const errorMsg = error.message || "Ошибка регистрации";
-          set({ notification: { type: "error", message: errorMsg } });
-          return { success: false, error: errorMsg };
-        }
-
-        set({
+        set({ 
+          isLoading: false,
           profile: null,
           isAuthenticated: false,
-          isLoading: false,
-          notification: {
-            type: "success",
-            message:
-              "Регистрация успешна! На вашу почту отправлено письмо с подтверждением. Подтвердите его, чтобы войти.",
-          },
+          notification: null
         });
+
+        if (error) {
+          const errorMsg = error.message || "Ошибка регистрации";
+          return { success: false, error: errorMsg };
+        }
 
         return { success: true };
       },
@@ -133,8 +127,18 @@ export const useAuthStore = create<AuthStore>()(
 
       checkAuth: async () => {
         set({ isLoading: true });
-        const { profile } = await authService.getCurrentUser();
-        set({ profile, isAuthenticated: !!profile, isLoading: false });
+        try {
+          const { profile, error } = await authService.getCurrentUser();
+          if (error) {
+            console.error("CheckAuth error:", error);
+            set({ profile: null, isAuthenticated: false, isLoading: false });
+            return;
+          }
+          set({ profile, isAuthenticated: !!profile, isLoading: false });
+        } catch (error) {
+          console.error("CheckAuth error:", error);
+          set({ profile: null, isAuthenticated: false, isLoading: false });
+        }
       },
     }),
     {

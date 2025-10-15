@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuthStore } from '../../store/auth.store';
 import type { UserType } from '../../types/auth.types';
 
 export const Register: React.FC = () => {
-  const navigate = useNavigate();
   const register = useAuthStore((state) => state.register);
   const isLoading = useAuthStore((state) => state.isLoading);
 
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    confirmPassword: '',
     full_name: '',
     phone: '',
     user_type: 'client' as UserType
@@ -22,11 +20,6 @@ export const Register: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
-    if (formData.password !== formData.confirmPassword) {
-      setError('Пароли не совпадают');
-      return;
-    }
 
     if (formData.password.length < 6) {
       setError('Пароль должен быть минимум 6 символов');
@@ -42,12 +35,12 @@ export const Register: React.FC = () => {
     });
 
     if (result.success) {
-      navigate('/auth/login', { state: { fromRegister: true } });
+      // Используем window.location для полной перезагрузки страницы
+      window.location.href = '/auth/login?registered=true';
     } else {
       setError(result.error || 'Ошибка регистрации');
     }
   };
-
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({
@@ -174,22 +167,7 @@ export const Register: React.FC = () => {
                 onChange={handleChange}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
-            </div>
-
-            {/* Confirm Password */}
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                Подтвердите пароль *
-              </label>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                required
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              />
+              <p className="mt-1 text-xs text-gray-500">Минимум 6 символов</p>
             </div>
           </div>
 
