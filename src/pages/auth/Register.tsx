@@ -23,7 +23,6 @@ export const Register: React.FC = () => {
     e.preventDefault();
     setError('');
 
-    // Валидация
     if (formData.password !== formData.confirmPassword) {
       setError('Пароли не совпадают');
       return;
@@ -34,21 +33,21 @@ export const Register: React.FC = () => {
       return;
     }
 
-    // Регистрация
     const result = await register({
       email: formData.email,
       password: formData.password,
       full_name: formData.full_name,
       phone: formData.phone || undefined,
-      role: formData.user_type
+      user_type: formData.user_type
     });
 
     if (result.success) {
-      navigate('/');
+      navigate('/auth/login', { state: { fromRegister: true } });
     } else {
       setError(result.error || 'Ошибка регистрации');
     }
   };
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({
@@ -91,11 +90,10 @@ export const Register: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, user_type: 'client' })}
-                  className={`p-4 border-2 rounded-lg text-center transition ${
-                    formData.user_type === 'client'
-                      ? 'border-primary-500 bg-primary-50'
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
+                  className={`p-4 border-2 rounded-lg text-center transition ${formData.user_type === 'client'
+                    ? 'border-primary-500 bg-primary-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                    }`}
                 >
                   <div className="font-medium">Найти услугу</div>
                   <div className="text-sm text-gray-500">Клиент</div>
@@ -103,11 +101,10 @@ export const Register: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, user_type: 'specialist' })}
-                  className={`p-4 border-2 rounded-lg text-center transition ${
-                    formData.user_type === 'specialist'
-                      ? 'border-primary-500 bg-primary-50'
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
+                  className={`p-4 border-2 rounded-lg text-center transition ${formData.user_type === 'specialist'
+                    ? 'border-primary-500 bg-primary-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                    }`}
                 >
                   <div className="font-medium">Оказывать услуги</div>
                   <div className="text-sm text-gray-500">Специалист</div>

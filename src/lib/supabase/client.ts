@@ -1,25 +1,27 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables. Please check your .env file or GitHub secrets.');
+  throw new Error(
+    "Missing Supabase environment variables. Please check your .env file or GitHub secrets."
+  );
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: true
-  }
+    detectSessionInUrl: true,
+  },
 });
 
 export type Tables = {
   profiles: {
     Row: {
       id: string;
-      user_type: 'client' | 'specialist' | 'admin';
+      user_type: "client" | "specialist" | "admin";
       personal_data: Record<string, any>;
       avatar_url: string | null;
       cover_image_url: string | null;
@@ -38,12 +40,12 @@ export type Tables = {
     };
     Insert: {
       id: string;
-      user_type: 'client' | 'specialist' | 'admin';
+      user_type: "client" | "specialist" | "admin";
       personal_data?: Record<string, any>;
       avatar_url?: string | null;
       bio?: string | null;
     };
-    Update: Partial<Tables['profiles']['Insert']>;
+    Update: Partial<Tables["profiles"]["Insert"]>;
   };
   services: {
     Row: {
@@ -53,7 +55,7 @@ export type Tables = {
       title: string;
       slug: string;
       description: string | null;
-      price_type: 'fixed' | 'hourly' | 'package' | 'custom';
+      price_type: "fixed" | "hourly" | "package" | "custom";
       price: number | null;
       currency: string;
       duration_minutes: number | null;

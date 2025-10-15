@@ -1,4 +1,4 @@
-export type UserType = 'client' | 'specialist' | 'admin';
+export type UserType = "client" | "specialist" | "admin";
 
 export interface Profile {
   id: string;
@@ -9,7 +9,7 @@ export interface Profile {
     phone?: string;
     [key: string]: any;
   };
-  avatar_url: string| null;
+  avatar_url: string | null;
   cover_image_url: string | null;
   bio?: string;
   rating: number;

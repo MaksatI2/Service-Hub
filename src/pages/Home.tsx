@@ -19,12 +19,12 @@ export const Home: React.FC = () => {
 
   const loadData = async () => {
     setIsLoading(true);
-    
+
     const { categories: cats } = await serviceService.getCategories();
     setCategories(cats);
 
     await loadServices();
-    
+
     setIsLoading(false);
   };
 
@@ -97,11 +97,10 @@ export const Home: React.FC = () => {
           <div className="flex items-center space-x-4 overflow-x-auto pb-2">
             <button
               onClick={() => setSelectedCategory(undefined)}
-              className={`px-4 py-2 rounded-lg whitespace-nowrap transition ${
-                !selectedCategory
+              className={`px-4 py-2 rounded-lg whitespace-nowrap transition ${!selectedCategory
                   ? 'bg-primary-600 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
+                }`}
             >
               Все категории
             </button>
@@ -109,11 +108,10 @@ export const Home: React.FC = () => {
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`px-4 py-2 rounded-lg whitespace-nowrap transition ${
-                  selectedCategory === category.id
+                className={`px-4 py-2 rounded-lg whitespace-nowrap transition ${selectedCategory === category.id
                     ? 'bg-primary-600 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+                  }`}
               >
                 {category.name}
               </button>
@@ -189,7 +187,7 @@ export const Home: React.FC = () => {
                           />
                         ) : (
                           <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-semibold">
-                            {service?.specialist?.personal_data?.full_name? service.specialist.personal_data.full_name.charAt(0).toUpperCase(): ''}
+                            {service?.specialist?.personal_data?.full_name ? service.specialist.personal_data.full_name.charAt(0).toUpperCase() : ''}
                           </div>
                         )}
                         <div className="flex-1 min-w-0">
