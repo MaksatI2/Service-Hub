@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { profileService } from '../../lib/services/profile.service';
 import type { Profile } from '../../types/auth.types';
+import { FaTelegram, FaWhatsapp, FaInstagram, FaLinkedin, FaGithub, FaGlobe, FaFacebook, FaYoutube } from 'react-icons/fa';
 
 interface SocialLinksFormProps {
   profile: Profile;
@@ -11,49 +12,49 @@ const SOCIAL_PLATFORMS = [
   {
     key: 'telegram',
     name: 'Telegram',
-    icon: '✈️',
+    icon: <FaTelegram className="w-4 h-4" />,
     placeholder: 'https://t.me/username'
   },
   {
     key: 'whatsapp',
     name: 'WhatsApp',
-    icon: '💬',
+    icon: <FaWhatsapp className="w-4 h-4" />,
     placeholder: 'https://wa.me/1234567890'
   },
   {
     key: 'instagram',
     name: 'Instagram',
-    icon: '📷',
+    icon: <FaInstagram className="w-4 h-4" />,
     placeholder: 'https://instagram.com/username'
   },
   {
     key: 'linkedin',
     name: 'LinkedIn',
-    icon: '💼',
+    icon: <FaLinkedin className="w-4 h-4" />,
     placeholder: 'https://linkedin.com/in/username'
   },
   {
     key: 'github',
     name: 'GitHub',
-    icon: '🐙',
+    icon: <FaGithub className="w-4 h-4" />,
     placeholder: 'https://github.com/username'
   },
   {
     key: 'portfolio',
     name: 'Портфолио',
-    icon: '🌐',
+    icon: <FaGlobe className="w-4 h-4" />,
     placeholder: 'https://yourportfolio.com'
   },
   {
     key: 'facebook',
     name: 'Facebook',
-    icon: '👍',
+    icon: <FaFacebook className="w-4 h-4" />,
     placeholder: 'https://facebook.com/username'
   },
   {
     key: 'youtube',
     name: 'YouTube',
-    icon: '🎥',
+    icon: <FaYoutube className="w-4 h-4" />,
     placeholder: 'https://youtube.com/@username'
   }
 ];
@@ -105,8 +106,8 @@ export const SocialLinksForm: React.FC<SocialLinksFormProps> = ({ profile, onSav
       <div className="space-y-4">
         {SOCIAL_PLATFORMS.map(platform => (
           <div key={platform.key}>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <span className="mr-2">{platform.icon}</span>
+            <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
+              <span className="mr-2 flex items-center">{platform.icon}</span>
               {platform.name}
             </label>
             <input
