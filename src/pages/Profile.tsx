@@ -3,6 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/auth.store';
 import { profileService } from '../lib/services/profile.service';
 import type { Profile } from '../types/auth.types';
+import { SocialLinksForm } from '../components/forms/SocialLinksForm';
+import {
+  FaTelegram,
+  FaWhatsapp,
+  FaInstagram,
+  FaLinkedin,
+  FaGithub,
+  FaGlobe,
+  FaFacebook,
+  FaYoutube
+} from 'react-icons/fa';
 
 export const ProfileView: React.FC = () => {
   const navigate = useNavigate();
@@ -181,7 +192,58 @@ export const ProfileView: React.FC = () => {
     setIsLoading(false);
   };
 
+  const handleSocialLinksSave = () => {
+    setSuccess('Социальные ссылки успешно обновлены');
+    window.location.reload();
+  };
+
   const documents = profile.verification_data?.documents || [];
+
+  const renderSocialLinksView = () => {
+    const socialPlatforms = [
+      { key: 'telegram', name: 'Telegram', icon: <FaTelegram className="w-5 h-5" /> },
+      { key: 'whatsapp', name: 'WhatsApp', icon: <FaWhatsapp className="w-5 h-5" /> },
+      { key: 'instagram', name: 'Instagram', icon: <FaInstagram className="w-5 h-5" /> },
+      { key: 'linkedin', name: 'LinkedIn', icon: <FaLinkedin className="w-5 h-5" /> },
+      { key: 'github', name: 'GitHub', icon: <FaGithub className="w-5 h-5" /> },
+      { key: 'portfolio', name: 'Портфолио', icon: <FaGlobe className="w-5 h-5" /> },
+      { key: 'facebook', name: 'Facebook', icon: <FaFacebook className="w-5 h-5" /> },
+      { key: 'youtube', name: 'YouTube', icon: <FaYoutube className="w-5 h-5" /> }
+    ];
+
+    const hasSocialLinks = profile.social_links && Object.values(profile.social_links).some(link => link);
+
+    if (!hasSocialLinks) {
+      return <p className="text-gray-500 text-center py-8">Социальные ссылки не добавлены</p>;
+    }
+
+    return (
+      <div className="space-y-3">
+        {socialPlatforms.map(platform => {
+          const url = profile.social_links?.[platform.key];
+          return url ? (
+            <div key={platform.key} className="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
+              <div className="flex items-center gap-3">
+                <span className="flex items-center text-gray-700">{platform.icon}</span>
+                <div>
+                  <p className="font-medium text-gray-900">{platform.name}</p>
+                  <p className="text-sm text-gray-600 truncate max-w-xs">{url}</p>
+                </div>
+              </div>
+              <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
+              >
+                Перейти
+              </a>
+            </div>
+          ) : null;
+        })}
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -246,13 +308,17 @@ export const ProfileView: React.FC = () => {
           <div className="flex-shrink-0">
             <div className="relative">
               {profile.avatar_url ? (
-                <img
-                  src={profile.avatar_url}
-                  alt={profile.personal_data.full_name}
-                  className="h-32 w-32 rounded-full border-4 border-white shadow-lg"
-                />
+                <div className="relative h-32 w-32">
+                  <img
+                    src={profile.avatar_url}
+                    alt={profile.personal_data.full_name}
+                    className="h-full w-full rounded-full border-4 border-white shadow-lg object-cover bg-gray-100"
+                    loading="eager"
+                    decoding="async"
+                  />
+                </div>
               ) : (
-                <div className="h-32 w-32 rounded-full bg-primary-500 flex items-center justify-center text-white text-4xl font-semibold border-4 border-white shadow-lg">
+                <div className="h-32 w-32 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white text-4xl font-semibold border-4 border-white shadow-lg">
                   {profile.personal_data.full_name?.charAt(0) || 'U'}
                 </div>
               )}
@@ -308,8 +374,8 @@ export const ProfileView: React.FC = () => {
             <button
               onClick={() => setActiveTab('general')}
               className={`pb-4 font-medium text-sm ${activeTab === 'general'
-                  ? 'text-primary-600 border-b-2 border-primary-600'
-                  : 'text-gray-600 hover:text-gray-900'
+                ? 'text-primary-600 border-b-2 border-primary-600'
+                : 'text-gray-600 hover:text-gray-900'
                 }`}
             >
               Общая информация
@@ -317,8 +383,8 @@ export const ProfileView: React.FC = () => {
             <button
               onClick={() => setActiveTab('documents')}
               className={`pb-4 font-medium text-sm ${activeTab === 'documents'
-                  ? 'text-primary-600 border-b-2 border-primary-600'
-                  : 'text-gray-600 hover:text-gray-900'
+                ? 'text-primary-600 border-b-2 border-primary-600'
+                : 'text-gray-600 hover:text-gray-900'
                 }`}
             >
               Документы
@@ -326,8 +392,8 @@ export const ProfileView: React.FC = () => {
             <button
               onClick={() => setActiveTab('social')}
               className={`pb-4 font-medium text-sm ${activeTab === 'social'
-                  ? 'text-primary-600 border-b-2 border-primary-600'
-                  : 'text-gray-600 hover:text-gray-900'
+                ? 'text-primary-600 border-b-2 border-primary-600'
+                : 'text-gray-600 hover:text-gray-900'
                 }`}
             >
               Социальные ссылки
@@ -530,94 +596,13 @@ export const ProfileView: React.FC = () => {
         {/* Social Tab */}
         {activeTab === 'social' && (
           <div className="space-y-6">
-            <p className="text-gray-600 mb-6">Добавьте ссылки на ваши социальные сети и профессиональные аккаунты</p>
-
             {editMode ? (
-              <>
-                <div className="space-y-4">
-                  {[
-                    { key: 'telegram', name: 'Telegram', placeholder: 'https://t.me/username' },
-                    { key: 'whatsapp', name: 'WhatsApp', placeholder: 'https://wa.me/1234567890' },
-                    { key: 'instagram', name: 'Instagram', placeholder: 'https://instagram.com/username' },
-                    { key: 'linkedin', name: 'LinkedIn', placeholder: 'https://linkedin.com/in/username' },
-                    { key: 'github', name: 'GitHub', placeholder: 'https://github.com/username' },
-                    { key: 'portfolio', name: 'Портфолио', placeholder: 'https://yourportfolio.com' }
-                  ].map(platform => (
-                    <div key={platform.key}>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        {platform.name}
-                      </label>
-                      <input
-                        type="url"
-                        placeholder={platform.placeholder}
-                        defaultValue={formData?.social_links?.[platform.key] || ''}
-                        onChange={(e) => {
-                          setFormData(prev => ({
-                            ...prev,
-                            social_links: {
-                              ...prev?.social_links,
-                              [platform.key]: e.target.value
-                            }
-                          }));
-                        }}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                      />
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex gap-4 pt-6">
-                  <button
-                    onClick={handleSave}
-                    disabled={isLoading}
-                    className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isLoading ? 'Сохранение...' : 'Сохранить'}
-                  </button>
-                  <button
-                    onClick={handleEditToggle}
-                    disabled={isLoading}
-                    className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
-                  >
-                    Отмена
-                  </button>
-                </div>
-              </>
+              <SocialLinksForm
+                profile={profile}
+                onSave={handleSocialLinksSave}
+              />
             ) : (
-              <div className="space-y-3">
-                {[
-                  { key: 'telegram', name: 'Telegram', icon: '✈️' },
-                  { key: 'whatsapp', name: 'WhatsApp', icon: '💬' },
-                  { key: 'instagram', name: 'Instagram', icon: '📷' },
-                  { key: 'linkedin', name: 'LinkedIn', icon: '💼' },
-                  { key: 'github', name: 'GitHub', icon: '🐙' },
-                  { key: 'portfolio', name: 'Портфолио', icon: '🌐' }
-                ].map(platform => {
-                  const url = profile.social_links?.[platform.key];
-                  return url ? (
-                    <div key={platform.key} className="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <span className="text-lg">{platform.icon}</span>
-                        <div>
-                          <p className="font-medium text-gray-900">{platform.name}</p>
-                          <p className="text-sm text-gray-600 truncate">{url}</p>
-                        </div>
-                      </div>
-                      <a
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700"
-                      >
-                        Перейти
-                      </a>
-                    </div>
-                  ) : null;
-                })}
-                {!profile.social_links || Object.keys(profile.social_links).length === 0 && (
-                  <p className="text-gray-500 text-center py-8">Социальные ссылки не добавлены</p>
-                )}
-              </div>
+              renderSocialLinksView()
             )}
           </div>
         )}
